@@ -455,7 +455,7 @@ def edit_user():
 
         # Retrieve the user's data
         try:
-            cursor.execute("SELECT RUT, nombre, correo, permisos FROM User WHERE RUT = %s", (user_rut,))
+            cursor.execute("SELECT RUT, nombre, correo, telefono, direccion, permisos FROM User WHERE RUT = %s", (user_rut,))
             user = cursor.fetchone()
         except Exception as e:
             print("No se pudieron obtener los datos del usuario:", e)
@@ -479,7 +479,12 @@ def edit_user():
             user_rut = request.form.get("rut")
             nombre = request.form.get("nombre")
             correo = request.form.get("correo")
+            telefono = request.form.get("telefono")
+            direccion = request.form.get("direccion")
             permisos = request.form.get("permisos")
+            
+            # Format phone number
+            formatted_telefono = format_phone(telefono)
 
             # Check if mail's format is correct
             if not is_email_complex(correo):
@@ -497,10 +502,10 @@ def edit_user():
             # Update the user's data
             update_query = """
                 UPDATE User
-                SET nombre = %s, correo = %s, permisos = %s
+                SET nombre = %s, correo = %s, telefono = %s, direccion = %s, permisos = %s
                 WHERE RUT = %s
             """
-            cursor.execute(update_query, (nombre, correo, permisos, user_rut))
+            cursor.execute(update_query, (nombre, correo, formatted_telefono, direccion, permisos, user_rut))
             mysql.connection.commit()
             cursor.close()
             flash(f"Los datos del usuario RUT: {formatted_rut} han sido actualizados", "success")
@@ -514,7 +519,7 @@ def edit_user():
 
             # Retrieve the user's data
             try:
-                cursor.execute("SELECT RUT, nombre, correo, permisos FROM User WHERE RUT = %s", (user_rut,))
+                cursor.execute("SELECT RUT, nombre, correo, telefono, direccion, permisos FROM User WHERE RUT = %s", (user_rut,))
                 user = cursor.fetchone()
             except Exception as e2:
                 print("No se pudieron obtener los datos del usuario:", e2)

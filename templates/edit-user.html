@@ -25,10 +25,20 @@ Editar Usuario
         </div>
 
         <div class="mb-3">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" name="telefono" value="{{ user.telefono }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="direccion">Dirección:</label>
+            <input type="text" class="form-control" id="direccion" name="direccion" value="{{ user.direccion }}" required>
+        </div>
+
+        <div class="mb-3">
             <label for="permisos">Permisos:</label>
             <select type="text" class="form-select" id="permisos" name="permisos" required>
                 <option value="normal" {% if user.permisos == 'normal' %} selected {% endif %}>Normal</option>
-                <option value="bibliotecario" {% if user.permisos == 'bibliotecario' %} selected {% endif %}>Bibliotecario</option>
+                <option value="bibliotecario" {% if user.permisos == 'admin' %} selected {% endif %}>Admin</option>
             </select>            
         </div>
         <a href="/editar-usuarios" class="btn btn-secondary">Volver</a>
@@ -66,6 +76,26 @@ Editar Usuario
         var formattedRut = formatRut(rawRut);
         document.getElementById('formatted-rut').textContent = formattedRut;
         document.getElementById('hidden_formatted_rut').value = formattedRut;
+    });
+</script>
+
+<script>
+    function formatPhone(phone) {
+        var cleanedPhone = phone.replace(/[^0-9]/g, "");
+        if (cleanedPhone.length > 9) {
+            cleanedPhone = cleanedPhone.slice(0, 9);
+        }
+        var formattedPhone = "+";
+        for (var i = 0; i < cleanedPhone.length; i++) {
+            formattedPhone += cleanedPhone[i];
+        }
+        return formattedPhone;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var rawPhone = "{{ user.telefono }}";
+        var formattedPhone = formatPhone(rawPhone);
+        document.getElementById('telefono').value = formattedPhone;
     });
 </script>
 {% endblock %}
