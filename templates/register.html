@@ -36,26 +36,26 @@
     <script src="{{ url_for('static', filename='js_scripts/formateaRut.js') }}"></script>
     <script>
         var phoneInput = document.getElementById('phone');
-
+    
         phoneInput.addEventListener('input', function (e) {
             formatPhoneNumber(e);
         });
-
+    
         phoneInput.addEventListener('click', function (e) {
             if (e.target.value === '') {
                 e.target.value = '+';
             }
         });
-
+    
         function formatPhoneNumber(e) {
             var value = e.target.value.replace(/[^\d+]/g, '');
+            if (value.length > 1 && value.charAt(0) !== '+') {
+                value = '+' + value.slice(1);
+            }
             if (value.length > 12) {
                 value = value.slice(0, 12);
             }
-            if (value.charAt(0) !== '+') {
-                value = '+' + value.replace(/\D/g, '');
-            }
             e.target.value = value;
         }
-    </script>
+    </script>    
 {% endblock %}

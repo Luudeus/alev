@@ -559,5 +559,76 @@ def delete_user():
     return redirect(url_for("editar_usuarios"))
 
 
+@app.route("/mi-cuenta", methods=["GET", "POST"])
+@login_required  # Asume que tienes una función similar a esta para requerir inicio de sesión
+def mi_cuenta():
+    if request.method == "GET":
+        # Obtener el RUT de la sesión del usuario
+        user_rut = session.get("user_id")
+        if not user_rut:
+            flash("No se proporcionó el RUT del usuario", "warning")
+            return redirect(url_for("index"))
+
+        # Conectar con la base de datos
+        cursor = mysql.connection.cursor()
+
+        # Obtener los datos del usuario
+        try:
+            cursor.execute("SELECT * FROM User WHERE RUT = %s", (user_rut,))
+            user = cursor.fetchone()
+        except Exception as e:
+            print("No se pudieron obtener los datos del usuario:", e)
+            flash("No se pudieron obtener los datos del usuario", "warning")
+            return redirect(url_for("index"))
+
+        cursor.close()
+
+        # Verificar si el usuario existe
+        if not user:
+            flash("Usuario no encontrado", "warning")
+            return redirect(url_for("index"))
+
+        # Renderizar la plantilla mi-cuenta.html pasando los datos del usuario
+        return render_template("mi-cuenta.html", user=user)
+    
+    elif request.method == "POST":
+        try:
+            # Obtener el RUT y los datos del formulario
+            user_rut = session.get("user_id")
+            nombre = request.form.get("nombre")
+            correo = request.form.get("correo")
+            telefono = request.form.get("telefono")
+            direccion = request.form.get("direccion")
+
+            # Conectar con la base de datos
+            cursor = mysql.connection.cursor()
+
+            # Verificar si el usuario existe
+            cursor.execute("SELECT RUT FROM User WHERE RUT = %s", (user_rut,))
+            if cursor.fetchone() is None:
+                cursor.close()
+                flash("Usuario no encontrado", "warning")
+                return redirect(url_for("index"))
+
+            # Actualizar los datos del usuario
+            update_query = """
+                UPDATE User
+                SET nombre = %s, correo = %s, telefono = %s, direccion = %s
+                WHERE RUT = %s
+            """
+            cursor.execute(update_query, (nombre, correo, telefono, direccion, user_rut))
+            mysql.connection.commit()
+            cursor.close()
+            session["username"] = nombre
+            
+            flash(f"Los datos del usuario han sido actualizados", "success")
+            return redirect(url_for("mi_cuenta"))
+
+        except Exception as e:
+            print("Error al actualizar el usuario:", e)
+            flash("Error al actualizar el usuario", "warning")
+            return redirect(url_for("mi_cuenta"))
+        
+        
 if __name__ == "__main__":
     app.run(debug=True)

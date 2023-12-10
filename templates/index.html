@@ -31,7 +31,7 @@
                     <div class="btn-group-vertical">
                         {% if session["permission_type"] == "normal" %}
                             <a href="/certificado" class="btn btn-primary btn-lg">Obtener Certificado de Residencia</a>
-                            <a href="/cuenta" class="btn btn-secondary btn-lg">Ir a Mi Cuenta</a>
+                            <a href="/mi-cuenta" class="btn btn-secondary btn-lg">Ir a Mi Cuenta</a>
                             <a href="/logout" class="btn btn-danger btn-lg">Cerrar Sesión</a>
                         {% elif session["permission_type"] == "admin" %}
                             <a href="/lista-de-usuarios" class="btn btn-primary btn-lg">Lista de Usuarios</a>
