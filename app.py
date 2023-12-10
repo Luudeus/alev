@@ -206,6 +206,9 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["RUT"]
+        
+        # Remember name of the user
+        session["username"] = rows[0]["nombre"]
 
         # Remember permission type of the user
         session["permission_type"] = rows[0]["permisos"]

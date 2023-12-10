@@ -1,9 +1,47 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Junta de Vecinos
+    Página Principal
 {% endblock %}
 
 {% block main %}
-
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <img src="/static/main_logo.webp" alt="Logo" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <div class="text-center">
+                    <h1 class="display-4">
+                        {% if session["permission_type"] == "normal" %}
+                            ¡Bienvenido, {{ session["username"] }}!
+                        {% elif session["permission_type"] == "admin" %}
+                            Panel de Administrador, {{ session["username"] }}
+                        {% endif %}
+                    </h1>
+                    <p class="lead">
+                        {% if session["permission_type"] == "normal" %}
+                            Esta es la página principal para vecinos.
+                        {% elif session["permission_type"] == "admin" %}
+                            Esta es la página principal para administradores.
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="mt-4">
+                    <div class="btn-group-vertical">
+                        {% if session["permission_type"] == "normal" %}
+                            <a href="/certificado" class="btn btn-primary btn-lg">Obtener Certificado de Residencia</a>
+                            <a href="/cuenta" class="btn btn-secondary btn-lg">Ir a Mi Cuenta</a>
+                            <a href="/logout" class="btn btn-danger btn-lg">Cerrar Sesión</a>
+                        {% elif session["permission_type"] == "admin" %}
+                            <a href="/lista-de-usuarios" class="btn btn-primary btn-lg">Lista de Usuarios</a>
+                            <a href="/agregar-usuarios" class="btn btn-secondary btn-lg">Agregar Usuarios</a>
+                            <a href="/editar-usuarios" class="btn btn-primary btn-lg">Editar Usuarios</a>
+                            <a href="/generar-certificados" class="btn btn-secondary btn-lg">Generar Certificados</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
