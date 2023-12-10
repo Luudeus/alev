@@ -35,14 +35,13 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
                     <ul class="navbar-nav me-auto mt-2">
-                        {% if session["user_id"] %}
-                            <li class="nav-item"><a class="nav-link" href="/certificado">Generar certificado</a></li>
-                        {% endif %}
-                        {% if session["permission_type"] == "admin" %}
+                        {% if session["permission_type"] == "normal" %}
+                            <li class="nav-item"><a class="nav-link" href="/certificado">Certificado Residencia</a></li>
+                        {% elif session["permission_type"] == "admin" %}
                         <li class="nav-item"><a class="nav-link" href="/lista-de-usuarios">Lista de Usuarios</a></li>
                             <li class="nav-item"><a class="nav-link" href="/agregar-usuarios">Agregar Usuarios</a></li>
                             <li class="nav-item"><a class="nav-link" href="/editar-usuarios">Editar Usuarios</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/certificado-lista">Generar certificado</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/generar-certificados">Generar Certificados</a></li>
                         {% endif %}
                     </ul>
                     {% if session["user_id"] %}
