@@ -20,13 +20,42 @@
             <input name="email" autofocus class="form-control mx-auto w-auto" autocomplete="off" type="text" placeholder="Correo" required>
         </div>
         <div class="mb-3">
+            <input name="phone" id="phone" class="form-control mx-auto w-auto" autocomplete="off" type="text" placeholder="Teléfono" maxlength="12" required>
+        </div>
+        <div class="mb-3">
+            <input name="address" class="form-control mx-auto w-auto" autocomplete="off" type="text" placeholder="Dirección" required>
+        </div>
+        <div class="mb-3">
             <input name="password" class="form-control mx-auto w-auto" autocomplete="off" type="password" placeholder="Contraseña" required>
         </div>
-
         <div class="mb-3">
             <input name="confirmation" class="form-control mx-auto w-auto" autocomplete="off" type="password" placeholder="Confirmar contraseña" required>
         </div>
         <button class="btn btn-primary" type="submit">Registrarse</button>
     </form>
     <script src="{{ url_for('static', filename='js_scripts/formateaRut.js') }}"></script>
+    <script>
+        var phoneInput = document.getElementById('phone');
+
+        phoneInput.addEventListener('input', function (e) {
+            formatPhoneNumber(e);
+        });
+
+        phoneInput.addEventListener('click', function (e) {
+            if (e.target.value === '') {
+                e.target.value = '+';
+            }
+        });
+
+        function formatPhoneNumber(e) {
+            var value = e.target.value.replace(/[^\d+]/g, '');
+            if (value.length > 12) {
+                value = value.slice(0, 12);
+            }
+            if (value.charAt(0) !== '+') {
+                value = '+' + value.replace(/\D/g, '');
+            }
+            e.target.value = value;
+        }
+    </script>
 {% endblock %}

@@ -35,15 +35,11 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
                     <ul class="navbar-nav me-auto mt-2">
-                        {% if session["permission_type"] == "normal" or not session["user_id"] %}
-                            <li class="nav-item"><a class="nav-link" href="/quienes-somos">Quiénes Somos</a></li>
+                        {% if session["user_id"] %}
+                            <li class="nav-item"><a class="nav-link" href="/prestamos">Generar certificado</a></li>
                         {% endif %}
-                        <li class="nav-item"><a class="nav-link" href="/biblioteca">Biblioteca</a></li>
-                        {% if session["permission_type"] == "normal" %}
-                            <li class="nav-item"><a class="nav-link" href="/prestamos">Mis Préstamos</a></li>
-                        {% elif session["permission_type"] == "bibliotecario" %}
-                            <li class="nav-item"><a class="nav-link" href="/agregar-libros">Agregar Libros</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/editar-libros">Editar Libros</a></li>
+                        {% if session["permission_type"] == "bibliotecario" %}
+                        <li class="nav-item"><a class="nav-link" href="/biblioteca">Lista de Usuarios</a></li>
                             <li class="nav-item"><a class="nav-link" href="/agregar-usuarios">Agregar Usuarios</a></li>
                             <li class="nav-item"><a class="nav-link" href="/editar-usuarios">Editar Usuarios</a></li>
                             <li class="nav-item"><a class="nav-link" href="/ver-prestamos">Ver préstamos</a></li>
