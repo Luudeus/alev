@@ -492,7 +492,7 @@ def edit_user():
             # Check phone's number length
             if not is_phone_valid(formatted_telefono):
                 flash("El teléfono debe contener 11 dígitos", "warning")
-                return render_template("mi-cuenta.html")
+                raise Exception("El teléfono debe contener 11 dígitos.")
 
             # Check if mail's format is correct
             if not is_email_complex(correo):
@@ -565,10 +565,10 @@ def delete_user():
 
 
 @app.route("/mi-cuenta", methods=["GET", "POST"])
-@login_required  # Asume que tienes una función similar a esta para requerir inicio de sesión
+@login_required
 def mi_cuenta():
     if request.method == "GET":
-        # Obtener el RUT de la sesión del usuario
+        # Retrieve RUT from user's session
         user_rut = session.get("user_id")
         if not user_rut:
             flash("No se proporcionó el RUT del usuario", "warning")
@@ -614,7 +614,7 @@ def mi_cuenta():
             # Check phone's number length
             if not is_phone_valid(formatted_telefono):
                 flash("El teléfono debe contener 11 dígitos", "warning")
-                return render_template("mi-cuenta.html")
+                raise Exception("El teléfono debe contener 11 dígitos.")
 
             # Check if mail's format is correct
             if not is_email_complex(correo):
