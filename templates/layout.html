@@ -38,7 +38,7 @@
                         {% if session["user_id"] %}
                             <li class="nav-item"><a class="nav-link" href="/prestamos">Generar certificado</a></li>
                         {% endif %}
-                        {% if session["permission_type"] == "bibliotecario" %}
+                        {% if session["permission_type"] == "admin" %}
                         <li class="nav-item"><a class="nav-link" href="/biblioteca">Lista de Usuarios</a></li>
                             <li class="nav-item"><a class="nav-link" href="/agregar-usuarios">Agregar Usuarios</a></li>
                             <li class="nav-item"><a class="nav-link" href="/editar-usuarios">Editar Usuarios</a></li>

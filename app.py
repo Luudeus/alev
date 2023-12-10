@@ -51,7 +51,7 @@ def after_request(response):
     return response
 
 
-def database_user_register(cursor, rut, name, mail, phone, password, permission="normal"):
+def database_user_register(cursor, rut, name, mail, phone, address, password, permission="normal"):
     """
     Register a user into the database.
 
@@ -74,12 +74,13 @@ def database_user_register(cursor, rut, name, mail, phone, password, permission=
     """
 
     cursor.execute(
-        "INSERT INTO User (RUT, nombre, correo, telefono, permisos, contrasenia) VALUES (%s, %s, %s, %s, %s, %s)",
+        "INSERT INTO User (RUT, nombre, correo, telefono, direccion, permisos, contrasenia) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         (
             rut,
             name,
             mail,
             phone,
+            address,
             permission,
             password,
         ),
@@ -227,7 +228,7 @@ def register():
         # Get form data
         rut = request.form.get("rut")
         name = request.form.get("name")
-        mail = request.form.get("mail")
+        mail = request.form.get("email")
         phone = request.form.get("phone")
         address = request.form.get("address")
         password = request.form.get("password")
@@ -265,6 +266,7 @@ def register():
                 formatted_name,
                 formatted_mail,
                 formatted_phone,
+                address,
                 hash_password(password),
             )
         except Exception as e:
@@ -305,22 +307,26 @@ def agregar_usuarios():
         # Get form data
         rut = request.form.get("rut")
         name = request.form.get("name")
-        mail = request.form.get("mail")
+        mail = request.form.get("email")
+        phone = request.form.get("phone")
+        address = request.form.get("address")
         permission = request.form.get("permisos")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
 
         # Validate user's entries
         errors = validate_register_input(
-            rut, name, mail, password, confirmation, permission
+            rut, name, mail, phone, address, password, confirmation, permission
         )
         if errors:
             for error in errors:
                 flash(error, "warning")
             return render_template("agregar-usuarios.html")
 
-        # Format RUT, mail and name
-        formatted_rut, formatted_mail, formatted_name = format_data(rut, mail, name)
+        # Format RUT, mail, name, and phone
+        formatted_rut, formatted_mail, formatted_name, formatted_phone = format_data(
+            rut, mail, name, phone
+        )
 
         # Check if rut is available
         cursor = mysql.connection.cursor()
@@ -343,6 +349,8 @@ def agregar_usuarios():
                 formatted_rut,
                 formatted_name,
                 formatted_mail,
+                formatted_phone,
+                address,
                 hash_password(password),
                 permission,
             )
@@ -356,7 +364,7 @@ def agregar_usuarios():
             cursor.close()
 
         flash(
-            f"Usuario creado correctamente.\nRUT: {rut}\nNombre: {name}\nCorreo: {mail}\nPermisos: {permission}\nContraseña: {password}",
+            f"Usuario creado correctamente.\nRUT: {rut}\nNombre: {name}\nCorreo: {mail}\nTeléfono: {phone}\nDirección: {address}\nPermisos: {permission}\nContraseña: {password}",
             "success",
         )
         return render_template("agregar-usuarios.html")

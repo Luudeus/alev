@@ -6,7 +6,8 @@ CREATE TABLE User (
     RUT VARCHAR(12) UNIQUE NOT NULL,
     nombre VARCHAR(255) NOT NULL,
     correo VARCHAR(255) NOT NULL,
-    telefono VARCHAR(15) NOT NULL,
+    telefono VARCHAR(11) NOT NULL,
+    direccion VARCHAR(255) NOT NULL,
     permisos VARCHAR(20) NOT NULL,
     contrasenia VARCHAR(255) NOT NULL
 );

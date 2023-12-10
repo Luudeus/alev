@@ -89,7 +89,7 @@ def is_address_valid(address):
         bool: True if the address meets complexity requirements, False otherwise.
 
     """
-    return re.match(r'^[0-9a-zA-Z\-/.,]+$', address) is not None
+    return re.match(r'^[0-9a-zA-Z\-/., ]+$', address) is not None
 
 
 def is_password_complex(password):
