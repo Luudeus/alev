@@ -488,6 +488,11 @@ def edit_user():
             
             # Format phone number
             formatted_telefono = format_phone(telefono)
+            
+            # Check phone's number length
+            if not is_phone_valid(formatted_telefono):
+                flash("El teléfono debe contener 11 dígitos", "warning")
+                return render_template("mi-cuenta.html")
 
             # Check if mail's format is correct
             if not is_email_complex(correo):
@@ -605,6 +610,11 @@ def mi_cuenta():
             
             # Format phone number
             formatted_telefono = format_phone(telefono)
+            
+            # Check phone's number length
+            if not is_phone_valid(formatted_telefono):
+                flash("El teléfono debe contener 11 dígitos", "warning")
+                return render_template("mi-cuenta.html")
 
             # Check if mail's format is correct
             if not is_email_complex(correo):
@@ -624,7 +634,7 @@ def mi_cuenta():
                 SET nombre = %s, correo = %s, telefono = %s, direccion = %s
                 WHERE RUT = %s
             """
-            cursor.execute(update_query, (nombre, correo, telefono, direccion, user_rut))
+            cursor.execute(update_query, (nombre, correo, formatted_telefono, direccion, user_rut))
             mysql.connection.commit()
             cursor.close()
             session["username"] = nombre

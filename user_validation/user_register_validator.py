@@ -45,7 +45,7 @@ def validate_register_input(
         )
     # Phone complexity validation
     if not is_phone_valid(phone):
-        errors.append("El teléfono debe comenzar con '+' y contener solo dígitos después")
+        errors.append("El teléfono debe contener 11 dígitos")
     # Address complexity validation
     if not is_address_valid(address):
         errors.append("La dirección debe contener números, letras, guiones, barras, comas y puntos")
@@ -76,6 +76,9 @@ def is_phone_valid(phone):
         bool: True if the phone number is in a valid format, False otherwise.
 
     """
+    if len(phone) != 11:
+        return False
+
     return re.match(r'^\+\d{1,}$', phone) is not None
 
 
