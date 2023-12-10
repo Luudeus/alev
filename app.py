@@ -569,10 +569,10 @@ def mi_cuenta():
             flash("No se proporcionó el RUT del usuario", "warning")
             return redirect(url_for("index"))
 
-        # Conectar con la base de datos
+        # Connect to the database
         cursor = mysql.connection.cursor()
 
-        # Obtener los datos del usuario
+        # Retrieve the user's data
         try:
             cursor.execute("SELECT * FROM User WHERE RUT = %s", (user_rut,))
             user = cursor.fetchone()
@@ -583,34 +583,42 @@ def mi_cuenta():
 
         cursor.close()
 
-        # Verificar si el usuario existe
+        # Check if the user exists
         if not user:
             flash("Usuario no encontrado", "warning")
             return redirect(url_for("index"))
 
-        # Renderizar la plantilla mi-cuenta.html pasando los datos del usuario
+        # Render the mi-cuenta.html template passing the user's data
         return render_template("mi-cuenta.html", user=user)
     
     elif request.method == "POST":
         try:
-            # Obtener el RUT y los datos del formulario
+            # Retrieve the RUT and form data
             user_rut = session.get("user_id")
             nombre = request.form.get("nombre")
             correo = request.form.get("correo")
             telefono = request.form.get("telefono")
             direccion = request.form.get("direccion")
 
-            # Conectar con la base de datos
+            # Connect to the database
             cursor = mysql.connection.cursor()
+            
+            # Format phone number
+            formatted_telefono = format_phone(telefono)
 
-            # Verificar si el usuario existe
+            # Check if mail's format is correct
+            if not is_email_complex(correo):
+                flash("El correo debe estar en un formato correcto. Ejemplo: 'example@example.com'", "warning")
+                raise Exception("El correo no tiene un formato adecuado.")
+
+            # Check if the user exists
             cursor.execute("SELECT RUT FROM User WHERE RUT = %s", (user_rut,))
             if cursor.fetchone() is None:
                 cursor.close()
                 flash("Usuario no encontrado", "warning")
                 return redirect(url_for("index"))
 
-            # Actualizar los datos del usuario
+            # Update the user's data
             update_query = """
                 UPDATE User
                 SET nombre = %s, correo = %s, telefono = %s, direccion = %s
