@@ -66,7 +66,7 @@ def database_user_register(cursor, rut, name, mail, phone, address, password, pe
         mail (str): The user's email address.
         phone (str): The user's phone number.
         password (str): The user's password.
-        permission (str, optional): The user's permission level (e.g., "normal" or "bibliotecario").
+        permission (str, optional): The user's permission level (e.g., "normal" or "admin").
                                     Defaults to "normal" if not specified.
 
     Returns:
@@ -88,7 +88,7 @@ def database_user_register(cursor, rut, name, mail, phone, address, password, pe
     mysql.connection.commit()
 
 
-def search_books(template_name):
+def search_users(template_name):
     # Retrieve query parameters for search, ordering, and pagination
     search_term = request.args.get("search", default="")
     order = request.args.get("o", default="id_book")
@@ -100,23 +100,23 @@ def search_books(template_name):
     cursor = mysql.connection.cursor()
 
     # Start building the SQL query
-    base_query = "SELECT * FROM Book"
+    base_query = "SELECT * FROM User"
     where_clause = ""
     order_clause = ""
 
     # Add a WHERE clause if a search term is provided
     if search_term:
-        where_clause = " WHERE titulo LIKE %s"
+        where_clause = " WHERE nombre LIKE %s"
 
     # Validate ordering parameters and add ORDER BY clause
-    valid_columns = ["id_book","titulo", "autor", "anio", "genero", "stock"]
+    valid_columns = ["rut", "nombre", "correo", "telefono", "direccion", "permisos"]
     if order in valid_columns and direction in ["ASC", "DESC"]:
         order_clause = f" ORDER BY {order} {direction}"
 
     # Pagination clause
     pagination_clause = f" LIMIT {per_page} OFFSET {(page - 1) * per_page}"
 
-    # Complete SQL query for books
+    # Complete SQL query for users
     query = f"{base_query}{where_clause}{order_clause}{pagination_clause}"
 
     # Execute the query with parameters if needed
@@ -129,30 +129,30 @@ def search_books(template_name):
         print("Error during query execution:", e)
 
     # Fetch the results
-    books = cursor.fetchall()
+    users = cursor.fetchall()
 
-    # Query for total count of books (for pagination)
-    count_query = "SELECT COUNT(*) FROM Book" + where_clause
+    # Query for total count of users (for pagination)
+    count_query = "SELECT COUNT(*) FROM User" + where_clause
     cursor.execute(count_query, (f"%{search_term}%",) if search_term else ())
     result = cursor.fetchone()
-    total_books = result["COUNT(*)"] if result else 0
+    total_users = result["COUNT(*)"] if result else 0
 
     # Calculate total pages
-    total_pages = (total_books + per_page - 1) // per_page
+    total_pages = (total_users + per_page - 1) // per_page
 
     cursor.close()
 
     # Check if the request is an AJAX request
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         return jsonify(
-            {"books": books, "total_pages": total_pages, "current_page": page}
+            {"users": users, "total_pages": total_pages, "current_page": page}
         )
 
     # Create a Pagination object
-    pagination = Pagination(page=page, per_page=per_page, total_count=total_books)
+    pagination = Pagination(page=page, per_page=per_page, total_count=total_users)
 
-    # Render the template with the fetched books and pagination data
-    return render_template(f"{template_name}.html", books=books, pagination=pagination)
+    # Render the template with the fetched users and pagination data
+    return render_template(f"{template_name}.html", users=users, pagination=pagination)
 
 # Route functions
 @app.route("/")
@@ -292,9 +292,9 @@ def logout():
     return redirect("/")
 
 
-@app.route("/biblioteca", methods=["GET"])
-def biblioteca():
-    return search_books("biblioteca")
+@app.route("/lista-de-usuarios", methods=["GET"])
+def lista_de_usuarios():
+    return search_users("lista-de-usuarios")
 
 
 @app.route("/agregar-usuarios", methods=["GET", "POST"])
