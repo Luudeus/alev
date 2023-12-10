@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash
 
 
 def validate_register_input(
-    rut=None, name=None, mail=None, password=None, confirmation=None, permission=None
+    rut=None, name=None, mail=None, phone=None, address=None, password=None, confirmation=None, permission=None
 ):
     """Validate user input for registration.
 
@@ -11,6 +11,8 @@ def validate_register_input(
         rut (str, optional): The user's RUT.
         name (str, optional): The user's name.
         mail (str, optional): The user's email.
+        phone (str, optional): The user's phone.
+        address (str, optional): The user's address.
         password (str, optional): The user's password.
         confirmation (str, optional): The password confirmation.
 
@@ -27,15 +29,27 @@ def validate_register_input(
         errors.append("Se debe ingresar el nombre")
     if not mail:
         errors.append("Se debe ingresar el correo")
+    if not phone:
+        errors.append("Se debe ingresar el teléfono")
+    if not address:
+        errors.append("Se debe ingresar la dirección")
     if not password:
         errors.append("Se debe ingresar la contraseña")
     if not confirmation:
         errors.append("Se debe re-ingresar la contraseña")
+        
     # Mail complexity validation
     if not is_email_complex(mail):
         errors.append(
             "El correo debe estar en un formato correcto. Ejemplo: 'example@example.com'"
         )
+    # Phone complexity validation
+    if not is_phone_valid(phone):
+        errors.append("El teléfono debe comenzar con '+' y contener solo dígitos después")
+    # Address complexity validation
+    if not is_address_valid(address):
+        errors.append("La dirección debe contener números, letras, guiones, barras, comas y puntos")
+
     # Check if passwords match
     if not passwords_match(password, confirmation):
         errors.append("La contraseña y la contraseña de confirmación no coinciden")
@@ -50,6 +64,32 @@ def validate_register_input(
             errors.append("Tipo de permiso inválido")
             
     return errors
+
+
+def is_phone_valid(phone):
+    """Check if the phone number is in a valid format.
+
+    Args:
+        phone (str): The user's phone number.
+
+    Returns:
+        bool: True if the phone number is in a valid format, False otherwise.
+
+    """
+    return re.match(r'^\+\d{1,}$', phone) is not None
+
+
+def is_address_valid(address):
+    """Check if the address meets complexity requirements.
+
+    Args:
+        address (str): The user's address.
+
+    Returns:
+        bool: True if the address meets complexity requirements, False otherwise.
+
+    """
+    return re.match(r'^[0-9a-zA-Z\-/.,]+$', address) is not None
 
 
 def is_password_complex(password):

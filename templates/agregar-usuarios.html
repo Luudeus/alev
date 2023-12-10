@@ -21,12 +21,19 @@
             <input id="mail_register" name="mail" autofocus class="form-control" autocomplete="off" type="email" placeholder="Correo" required>
         </div>
         <div class="mb-3">
+            <label for="phone_register" class="form-label">Teléfono del Usuario</label>
+            <input id="phone_register" name="phone" autofocus class="form-control" autocomplete="off" type="text" placeholder="Teléfono" maxlength="12" required>
+        </div>
+        <div class="mb-3">
+            <label for="address_register" class="form-label">Dirección del Usuario</label>
+            <input id="address_register" name="address" autofocus class="form-control" autocomplete="off" type="text" placeholder="Dirección" required>
+        </div>
+        <div class="mb-3">
             <label for="password_register" class="form-label">Contraseña del Usuario</label>
             <input id="password_register" name="password" class="form-control" autocomplete="off" type="password" placeholder="Contraseña" required>
         </div>
-
         <div class="mb-3">
-            <label for="password_confirmation_register" class="form-label">Contraseña del Usuario</label>
+            <label for="password_confirmation_register" class="form-label">Confirmar Contraseña del Usuario</label>
             <input id="password_confirmation_register" name="confirmation" class="form-control" autocomplete="off" type="password" placeholder="Confirmar contraseña" required>
         </div>
         <div class="mb-3">
@@ -40,4 +47,28 @@
     </form>
 </div> 
 <script src="{{ url_for('static', filename='js_scripts/formateaRut.js') }}"></script>
+<script>
+    var phoneInput = document.getElementById('phone_register');
+
+    phoneInput.addEventListener('input', function (e) {
+        formatPhoneNumber(e);
+    });
+
+    phoneInput.addEventListener('click', function (e) {
+        if (e.target.value === '') {
+            e.target.value = '+';
+        }
+    });
+
+    function formatPhoneNumber(e) {
+        var value = e.target.value.replace(/[^\d+]/g, '');
+        if (value.length > 12) {
+            value = value.slice(0, 12);
+        }
+        if (value.charAt(0) !== '+') {
+            value = '+' + value.replace(/\D/g, '');
+        }
+        e.target.value = value;
+    }
+</script>
 {% endblock %}

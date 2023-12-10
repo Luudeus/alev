@@ -53,30 +53,48 @@ def format_name(name):
     return name
 
 
-def format_data(rut, mail, name):
+def format_phone(phone):
     """
-    Format the RUT, email, and name using the respective formatting functions.
+    Remove the '+' symbol from a phone number.
+
+    Parameters:
+    phone (str): A string representing a phone number.
+
+    Returns:
+    str: The phone number without the '+' symbol.
+    """
+    return phone.lstrip('+')
+
+
+def format_data(rut, mail, name, phone):
+    """
+    Format the RUT, email, name, and phone using the respective formatting functions.
 
     Parameters:
     rut (str): A string representing a Chilean RUT.
     mail (str): A string representing an email address.
     name (str): A string representing a person's name.
+    phone (str): A string representing a phone number.
 
     Returns:
-    tuple: A tuple containing the formatted RUT, email, and name.
+    tuple: A tuple containing the formatted RUT, email, name, and phone.
     """
     rut = format_rut(rut)
     mail = format_mail(mail)
     name = format_name(name)
-    return rut, mail, name
+    phone = format_phone(phone)
+    return rut, mail, name, phone
 
 
 if __name__ == "__main__":
     def main():
         # Example usage of the format_data function
-        formatted_rut, formatted_mail, formatted_name = format_data("12.345.678-9", "example.mail@domain.com", " JOHN DOE ")
+        formatted_rut, formatted_mail, formatted_name, formatted_phone = format_data(
+            "12.345.678-9", "example.mail@domain.com", " JOHN DOE ", "+123456789"
+        )
         print(f"Formatted RUT: {formatted_rut}")
         print(f"Formatted email: {formatted_mail}")
         print(f"Formatted name: {formatted_name}")
+        print(f"Formatted phone: {formatted_phone}")
 
     main()

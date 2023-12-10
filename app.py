@@ -51,12 +51,12 @@ def after_request(response):
     return response
 
 
-def database_user_register(cursor, rut, name, mail, password, permission="normal"):
+def database_user_register(cursor, rut, name, mail, phone, password, permission="normal"):
     """
     Register a user into the database.
 
     This function registers a user into the database by inserting their RUT, name, email,
-    permission level, and password into the appropriate database table. It uses the
+    phone, permission level, and password into the appropriate database table. It uses the
     provided cursor to execute the SQL query for registration.
 
     Args:
@@ -64,6 +64,7 @@ def database_user_register(cursor, rut, name, mail, password, permission="normal
         rut (str): The user's RUT (Rol Único Tributario), a unique identification number.
         name (str): The user's name.
         mail (str): The user's email address.
+        phone (str): The user's phone number.
         password (str): The user's password.
         permission (str, optional): The user's permission level (e.g., "normal" or "bibliotecario").
                                     Defaults to "normal" if not specified.
@@ -73,16 +74,18 @@ def database_user_register(cursor, rut, name, mail, password, permission="normal
     """
 
     cursor.execute(
-        "INSERT INTO User (RUT, nombre, correo, permisos, contrasenia) VALUES (%s, %s, %s, %s, %s)",
+        "INSERT INTO User (RUT, nombre, correo, telefono, permisos, contrasenia) VALUES (%s, %s, %s, %s, %s, %s)",
         (
             rut,
             name,
             mail,
+            phone,
             permission,
             password,
         ),
     )
     mysql.connection.commit()
+
 
 def search_books(template_name):
     # Retrieve query parameters for search, ordering, and pagination
@@ -154,7 +157,7 @@ def search_books(template_name):
 @app.route("/")
 @login_required
 def index():
-    """Show FuturaLib's homepage"""
+    """Show Junta de Vecinos's homepage"""
     return render_template("index.html")
 
 
@@ -225,18 +228,20 @@ def register():
         rut = request.form.get("rut")
         name = request.form.get("name")
         mail = request.form.get("mail")
+        phone = request.form.get("phone")
+        address = request.form.get("address")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
 
         # Validate user's entries
-        errors = validate_register_input(rut, name, mail, password, confirmation)
+        errors = validate_register_input(rut, name, mail, phone, address, password, confirmation)
         if errors:
             for error in errors:
                 flash(error, "warning")
             return render_template("register.html")
 
-        # Format RUT, mail and name
-        formatted_rut, formatted_mail, formatted_name = format_data(rut, mail, name)
+        # Format RUT, mail, name, and phone
+        formatted_rut, formatted_mail, formatted_name, formatted_phone = format_data(rut, mail, name, phone)
 
         # Check if rut is available
         cursor = mysql.connection.cursor()
@@ -259,6 +264,7 @@ def register():
                 formatted_rut,
                 formatted_name,
                 formatted_mail,
+                formatted_phone,
                 hash_password(password),
             )
         except Exception as e:
