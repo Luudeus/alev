@@ -27,6 +27,8 @@ Editar Usuarios
                         <option value="nombre" selected>Nombre</option>
                         <option value="rut">RUT</option>
                         <option value="correo">Correo</option>
+                        <option value="telefono">Teléfono</option>
+                        <option value="direccion">Dirección</option>
                         <option value="permisos">Permisos</option>
                     </select>
                 </div>
@@ -48,6 +50,8 @@ Editar Usuarios
                     <th scope="col">RUT</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Correo</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Dirección</th>
                     <th scope="col">Permisos</th>
                     <th scope="col">Acciones</th>
                 </tr>
@@ -120,10 +124,12 @@ Editar Usuarios
             row.insertCell(0).textContent = formatRut(user.RUT);
             row.insertCell(1).textContent = user.nombre;
             row.insertCell(2).textContent = user.correo;
-            row.insertCell(3).textContent = user.permisos;
+            row.insertCell(3).textContent = user.telefono;
+            row.insertCell(4).textContent = user.direccion;
+            row.insertCell(5).textContent = user.permisos;
 
             // Action cell
-            var actionsCell = row.insertCell(4);
+            var actionsCell = row.insertCell(6);
             actionsCell.style.display = "flex";
             actionsCell.style.justifyContent = "center";
             actionsCell.style.gap = "10px"; // This sets the space between the buttons

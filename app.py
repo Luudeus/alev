@@ -384,16 +384,16 @@ def editar_usuarios():
     cursor = mysql.connection.cursor()
 
     # Start building the SQL query
-    base_query = "SELECT RUT, nombre, correo, permisos FROM User"
+    base_query = "SELECT RUT, nombre, correo, telefono, direccion, permisos FROM User"
     where_clause = ""
     order_clause = ""
 
     # Add a WHERE clause if a search term is provided
     if search_term:
-        where_clause = " WHERE nombre LIKE %s OR correo LIKE %s"
+        where_clause = " WHERE RUT LIKE %s OR nombre LIKE %s OR correo LIKE %s OR telefono LIKE %s OR direccion LIKE %s or PERMISOS LIKE %s"
 
     # Validate ordering parameters and add ORDER BY clause
-    valid_columns = ["rut", "nombre", "correo", "permisos"]
+    valid_columns = ["rut", "nombre", "correo", "telefono", "direccion", "permisos"]
     if order in valid_columns and direction in ["ASC", "DESC"]:
         order_clause = f" ORDER BY {order} {direction}"
 
@@ -406,7 +406,7 @@ def editar_usuarios():
     # Execute the query with parameters if needed
     try:
         if search_term:
-            cursor.execute(query, (f"%{search_term}%", f"%{search_term}%"))
+            cursor.execute(query, (f"%{search_term}%", f"%{search_term}%", f"%{search_term}%", f"%{search_term}%", f"%{search_term}%", f"%{search_term}%"))
         else:
             cursor.execute(query)
     except Exception as e:
@@ -417,7 +417,8 @@ def editar_usuarios():
 
     # Query for total count of users (for pagination)
     count_query = "SELECT COUNT(*) FROM User" + where_clause
-    cursor.execute(count_query, (f"%{search_term}%", f"%{search_term}%") if search_term else ())
+    params = (f"%{search_term}%", f"%{search_term}%", f"%{search_term}%", f"%{search_term}%", f"%{search_term}%", f"%{search_term}%") if search_term else ()
+    cursor.execute(count_query, params)
     result = cursor.fetchone()
     total_users = result["COUNT(*)"] if result else 0
 
