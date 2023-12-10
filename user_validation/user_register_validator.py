@@ -76,10 +76,8 @@ def is_phone_valid(phone):
         bool: True if the phone number is in a valid format, False otherwise.
 
     """
-    if len(phone) != 11:
-        return False
-
-    return re.match(r'^\+\d{1,}$', phone) is not None
+    # Check if the length is 11 and all characters are digits
+    return bool(re.match(r'^\d{11}$', phone))
 
 
 def is_address_valid(address):
