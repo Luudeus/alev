@@ -150,7 +150,7 @@ def is_permission_valid(permission):
         bool: True if the permission is in permissions list, False otherwise.
 
     """
-    permissions = ["normal", "bibliotecario"]
+    permissions = ["normal", "admin"]
     return permission in permissions
 
 
