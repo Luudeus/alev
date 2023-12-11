@@ -41,8 +41,8 @@ def format_name(name):
     Returns:
     str: The formatted name.
     """
-    # Remove all characters that are not spaces or letters
-    name = re.sub(r"[^a-zA-Z\s]", "", name)
+    # Remove all characters that are not letters or spaces (including accented characters)
+    name = re.sub(r"[^\p{L}\s]", "", name, flags=re.UNICODE)
 
     # Convert the first letter of each word to uppercase
     name = name.title()
