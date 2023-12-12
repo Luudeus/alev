@@ -146,9 +146,11 @@ Editar Usuarios
 
             // Delete button
             var deleteButton = document.createElement('a');
-            deleteButton.href = `/delete-user?id=${user.RUT}`;
             deleteButton.textContent = 'Eliminar';
             deleteButton.classList.add('btn', 'btn-danger');
+            deleteButton.onclick = function() {
+                confirmDelete(user.RUT);
+            };
             actionsCell.appendChild(deleteButton);
         });
     }
@@ -266,6 +268,12 @@ Editar Usuarios
         return cleanedRut;
     }
     
+    function confirmDelete(userId) {
+        var confirmation = confirm("¿Estás seguro de que deseas eliminar este usuario?");
+        if (confirmation) {
+            window.location.href = `/delete-user?id=${userId}`;
+        }
+    }
 </script>
 {% endblock %}
 
